@@ -105,9 +105,12 @@ def extract_answers(request):
     submitted_answers = []
     for key in request.POST:
         if key.startswith('choice'):
-            value = request.POST[key]
-            choice_id = int(value)
-            submitted_answers.append(choice_id)
+            values = request.POST.getlist(key)
+            for val in values:
+                try:
+                    submitted_answers.append(int(val))
+                except ValueError:
+                    pass
     return submitted_answers
 
 
@@ -150,6 +153,7 @@ def show_exam_result(request, course_id, submission_id):
         'course': course,
         'submission': submission,
         'selected_ids': selected_ids,
+        'grade': int(percentage),
         'total_score': total_score,
         'total_possible': total_possible,
         'percentage': round(percentage, 1),
