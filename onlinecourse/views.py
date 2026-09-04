@@ -1,12 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
-from .models import Course, Lesson, Enrollment, Question, Choice, Submission
-from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
 import logging
+
+from .models import Course, Lesson, Enrollment, Question, Choice, Submission
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ def registration_request(request):
         try:
             User.objects.get(username=username)
             user_exist = True
-        except:
+        except Exception:
             logger.error("New user")
         if not user_exist:
             user = User.objects.create_user(
@@ -85,7 +85,7 @@ class CourseListView(generic.ListView):
 
 class CourseDetailView(generic.DetailView):
     model = Course
-    template_name = 'onlinecourse/course_details_bootstrap.html'
+    template_name = 'onlinecourse/course_detail_bootstrap.html'
 
 
 def enroll(request, course_id):
